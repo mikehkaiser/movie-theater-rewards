@@ -74,14 +74,38 @@ INSERT INTO num_nums(
 ;
 
 INSERT INTO concessions(
-	purchase_id,
+	transaction_id,
 	theater_id,
 	customer_id,
-	food_id,
 	purchase_total
 )VALUES
-	(1,101,123,12,4.25),
-	(2,102,124,14,5.25),
-	(3,101,123,13,6.50),
-	(4,102,124,15,4.25)
-;
+	(1,101,123,14.25),
+	(2,102,124,15.50),
+	(3,101,123,6.50),
+	(4,102,124,4.25);
+	
+
+
+INSERT INTO purchase_items(
+	purchase_item_id,
+	transaction_id,
+	food_id,
+	theater_id,
+	customer_id
+)VALUES
+	(1,1,12,101,123),
+	(2,1,13,101,123),
+	(3,1,16,101,123),
+	(4,2,13,102,124),
+	(5,2,14,102,124),
+	(6,2,15,102,124),
+	(7,1,13,102,124),
+	(8,2,12,102,124);
+
+UPDATE purchase_items
+SET transaction_id = 3
+WHERE purchase_item_id = 7;
+
+UPDATE purchase_items
+SET transaction_id = 4
+WHERE purchase_item_id = 8

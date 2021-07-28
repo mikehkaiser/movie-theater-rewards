@@ -20,8 +20,6 @@ CREATE TABLE movie(
 	movie_id SERIAL PRIMARY KEY,
 	title VARCHAR(50),
 	runtime NUMERIC(4),
-	theater_id INTEGER,
-	FOREIGN KEY (theater_id) REFERENCES theater(theater_id)
 );
 
 CREATE TABLE showing(
@@ -52,14 +50,31 @@ CREATE TABLE num_nums(
 	price NUMERIC(4,2)
 );
 
+-- CONCESSIONS TABLE SHOULD ALSO LINK TO A BILLING INFO TABLE WHICH CONNECTS CUSTOMER_ID AND BILLING INFORMATION
 CREATE TABLE concessions(
-	purchase_id SERIAL PRIMARY KEY,
+	transaction_id SERIAL PRIMARY KEY,
 	theater_id INTEGER NOT NULL,
 	customer_id INTEGER,
-	food_id INTEGER NOT NULL,
 	purchase_total NUMERIC(4,2) NOT NULL,
 	purchase_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	FOREIGN KEY (theater_id) REFERENCES theater(theater_id),
+	FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+-- PURCHASE_ITEMS IS A RECORD OF EACH FOOD ITEM SOLD, LINKING THE FOOD ITEM TO A 
+-- TRANSACTION AND CUSTOMER. THIS COULD LEAD TO IDENTIFYING A THEATER'S TOP-SELLING FOOD ITEM
+-- OR A CUSTOMER'S FAVORITE FOOD ITEM FOR INDIVIDUALIZED REWARDS OF A 'FREE FAVORITE ITEM'
+-- OR AT LEAST A RECORD SO THE CUSTOMER CAN TRACK WHAT THEY'VE HAD IN THE PAST
+CREATE TABLE purchase_items(
+	purchase_item_id SERIAL PRIMARY KEY,
+	food_id INTEGER,
+	transaction_id INTEGER,
+	theater_id INTEGER,
+	customer_id INTEGER,
+	FOREIGN KEY (transaction_id) REFERENCES concessions(transaction_id),
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+	FOREIGN KEY (theater_id) REFERENCES theater(theater_id),
 	FOREIGN KEY (food_id) REFERENCES num_nums(food_id)
 );
+
+-- 
